@@ -37,7 +37,6 @@ function Pawn(x,y,isWhite) {
     this.DidNotGo = true;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -89,7 +88,6 @@ function Rook(x,y,isWhite) {
     this.IsDestroyed = false;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -102,8 +100,6 @@ function Rook(x,y,isWhite) {
             if(i!=this.Location.X && i!=this.Location.Y){
                 this.GoPoints.push(new Point(this.Location.X,i));
                 this.GoPoints.push(new Point(i,this.Location.Y));
-                /*this.DestroyPoints[i] = new Point(this.Location.X,i);
-                this.DestroyPoints[8+i] = new Point(i,this.Location.Y);*/
             }
         }
         this.DestroyPoints = this.GoPoints;
@@ -133,7 +129,6 @@ function Knight(x,y,isWhite) {
     this.IsDestroyed = false;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -151,14 +146,6 @@ function Knight(x,y,isWhite) {
         this.GoPoints[6] = new Point(this.Location.X+1,this.Location.Y-2);
         this.GoPoints[7] = new Point(this.Location.X-1,this.Location.Y-2);
         this.DestroyPoints = this.GoPoints;
-        /*this.DestroyPoints[0] = new Point(this.Location.X+2,this.Location.Y+1);
-        this.DestroyPoints[1] = new Point(this.Location.X+2,this.Location.Y-1);
-        this.DestroyPoints[2] = new Point(this.Location.X-2,this.Location.Y+1);
-        this.DestroyPoints[3] = new Point(this.Location.X-2,this.Location.Y-1);
-        this.DestroyPoints[4] = new Point(this.Location.X+1,this.Location.Y+2);
-        this.DestroyPoints[5] = new Point(this.Location.X-1,this.Location.Y+2);
-        this.DestroyPoints[6] = new Point(this.Location.X+1,this.Location.Y-2);
-        this.DestroyPoints[7] = new Point(this.Location.X-1,this.Location.Y-2);*/
     }
     this.IsGoPoint = function (point) {
         for (let i = 0; i < this.GoPoints.length; i++) {
@@ -185,7 +172,6 @@ function Bishop(x,y,isWhite) {
     this.IsDestroyed = false;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -227,7 +213,6 @@ function Queen(x,y,isWhite) {
     this.IsDestroyed = false;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -275,7 +260,6 @@ function King(x,y,isWhite) {
     this.IsDestroyed = false;
     this.Location = new Point(x,y);
     this.GoPoints = [];
-    this.DangerousPoints = [];
     this.DestroyPoints = [];
     this.GoTo = function(pointId) {
         this.Location = this.GoPoints[pointId];
@@ -423,7 +407,6 @@ function ChessTeam(isWhite) {
         LocationsTmp.push(this.GroupKing.Location);
         this.GroupKing.UpdaterPoints();
         this.GroupLocations = LocationsTmp;
-        //return LocationsTmp;
     }
     this.IsBusyPoint = function(point) {
         for (let i = 0; i < this.GroupLocations.length; i++) {
@@ -447,22 +430,7 @@ function ChessTeam(isWhite) {
         }
     }
     this.FilterOutGoPoints = function() {
-        //let Tmp = this.getGroupLocations();
         this.UpdateGroupLocations();
-        /*this.GoFilterOut(this.Pawns);
-        this.GoFilterOut(this.Rooks);
-        this.GoFilterOut(this.Knights);
-        this.GoFilterOut(this.Bishops);
-        this.GoFilterOut(this.Queens);
-        let tmp = [];
-        for (let j = 0; j < this.GroupKing.GoPoints.length; j++) {
-            if(this.IsBusyPoint(this.GroupKing.GoPoints[j]) == true){
-                tmp.push(j);
-            }
-        }
-        for (let j = 0; j < tmp.length; j++) {
-            this.GroupKing.GoPoints.splice(tmp[j],1);
-        }*/
     }
     this.FindFigureByPoint = function (point) {
         let ExistPoint = false;
@@ -501,7 +469,6 @@ function ChessTeam(isWhite) {
             if(this.GroupKing.Location.compare(point) && this.GroupKing.IsDestroyed == false){
                 return new Figure(6,this.IsWhite,point);
             }
-
         }
         else{
             return new Figure(0,this.IsWhite,point);
@@ -569,8 +536,6 @@ function ChessTeam(isWhite) {
     }
 }
 
-
-
 function Board() {
     this.TeamsW = new ChessTeam(true);
     this.TeamsW.SetUp();
@@ -578,44 +543,11 @@ function Board() {
     this.TeamsD = new ChessTeam(false);
     this.TeamsD.SetUp();
     this.TeamsD.FilterOutGoPoints();
-    /*this.FilterPawns = function() {
-        let AllObjectLocation = [];
-        for (let i = 0; i < this.TeamsW.GroupLocations.length; i++) {
-            AllObjectLocation.push(this.TeamsW.GroupLocations[i]);
-            AllObjectLocation.push(this.TeamsD.GroupLocations[i]);
-        }
-        for (let i = 0; i < this.TeamsW.Pawns.length; i++) {
-            for (let j = 0; j < AllObjectLocation.length; j++) {
-                if(this.TeamsW.Pawns[i].IsDestroyed == false){
-                    let DeletePoints = [];
-                    this.TeamsW.Pawns[i].GoPoints.forEach(item =>{
-                        if(item == AllObjectLocation[j]){
-                            DeletePoints.push(item);
-                        }
-                    });
-                    for (let k = 0; k < DeletePoints.length; k++) {
-                        this.TeamsW.Pawns[i].GoPoints.splice(DeletePoints[k],1);
-                    }
-                }
-                if(this.TeamsD.Pawns[i].IsDestroyed == false){
-                    let DeletePoints = [];
-                    this.TeamsD.Pawns[i].GoPoints.forEach(item =>{
-                        if(item == AllObjectLocation[j]){
-                            DeletePoints.push(item);
-                        }
-                    });
-                    for (let k = 0; k < DeletePoints.length; k++) {
-                        this.TeamsD.Pawns[i].GoPoints.splice(DeletePoints[k],1);
-                    }
-                }
-            }
-        }
-    }*/
+
     this.GoFigure = function (figure,id) {
         if(figure.IsWhite){
             switch (figure.Type) {
                 case 1:
-                    //this.TeamsW.Pawns;
                     for (let i = 0; i < this.TeamsW.Pawns.length; i++) {
                         if(this.TeamsW.Pawns[i].Location.compare(figure.Point)){
                             this.TeamsW.Pawns[i].GoTo(id);
@@ -624,7 +556,6 @@ function Board() {
                     }
                     break;
                 case 2:
-                    //this.TeamsW.Rooks;
                     for (let i = 0; i < this.TeamsW.Rooks.length; i++) {
                         if(this.TeamsW.Rooks[i].Location.compare(figure.Point)){
                             this.TeamsW.Rooks[i].GoTo(id);
@@ -633,7 +564,6 @@ function Board() {
                     }
                     break;
                 case 3:
-                    //this.TeamsW.Knights;
                     for (let i = 0; i < this.TeamsW.Knights.length; i++) {
                         if(this.TeamsW.Knights[i].Location.compare(figure.Point)){
                             this.TeamsW.Knights[i].GoTo(id);
@@ -642,7 +572,6 @@ function Board() {
                     }
                     break;
                 case 4:
-                    //this.TeamsW.Bishops;
                     for (let i = 0; i < this.TeamsW.Bishops.length; i++) {
                         if(this.TeamsW.Bishops[i].Location.compare(figure.Point)){
                             this.TeamsW.Bishops[i].GoTo(id);
@@ -651,7 +580,6 @@ function Board() {
                     }
                     break;
                 case 5:
-                    //this.TeamsW.Queens;
                     for (let i = 0; i < this.TeamsW.Queens.length; i++) {
                         if(this.TeamsW.Queens[i].Location.compare(figure.Point)){
                             this.TeamsW.Queens[i].GoTo(id);
@@ -659,8 +587,7 @@ function Board() {
                         }
                     }
                     break;
-                case 6: 
-                    //this.TeamsW.GroupKing;
+                case 6:
                     if(this.TeamsW.GroupKing.Location.compare(figure.Point)){
                         this.TeamsW.GroupKing.GoTo(id);
                         this.TeamsW.EditPointFigure(figure,this.GroupKing.Location);
@@ -674,7 +601,6 @@ function Board() {
         else{
             switch (figure.Type) {
                 case 1:
-                    //this.TeamsD.Pawns;
                     for (let i = 0; i < this.TeamsD.Pawns.length; i++) {
                         if(this.TeamsD.Pawns[i].Location.compare(figure.Point)){
                             this.TeamsD.Pawns[i].GoTo(id);
@@ -683,7 +609,6 @@ function Board() {
                     }
                     break;
                 case 2:
-                    //this.TeamsD.Rooks;
                     for (let i = 0; i < this.TeamsD.Rooks.length; i++) {
                         if(this.TeamsD.Rooks[i].Location.compare(figure.Point)){
                             this.TeamsD.Rooks[i].GoTo(id);
@@ -692,7 +617,6 @@ function Board() {
                     }
                     break;
                 case 3:
-                    //this.TeamsD.Knights;
                     for (let i = 0; i < this.TeamsD.Knights.length; i++) {
                         if(this.TeamsD.Knights[i].Location.compare(figure.Point)){
                             this.TeamsD.Knights[i].GoTo(id);
@@ -701,7 +625,6 @@ function Board() {
                     }
                     break;
                 case 4:
-                    //this.TeamsD.Bishops;
                     for (let i = 0; i < this.TeamsD.Bishops.length; i++) {
                         if(this.TeamsD.Bishops[i].Location.compare(figure.Point)){
                             this.TeamsD.Bishops[i].GoTo(id);
@@ -710,7 +633,6 @@ function Board() {
                     }
                     break;
                 case 5:
-                    //this.TeamsD.Queens;
                     for (let i = 0; i < this.TeamsD.Queens.length; i++) {
                         if(this.TeamsD.Queens[i].Location.compare(figure.Point)){
                             this.TeamsD.Queens[i].GoTo(id);
@@ -718,8 +640,7 @@ function Board() {
                         }
                     }
                     break;
-                case 6: 
-                    //this.TeamsD.GroupKing;
+                case 6:
                     if(this.TeamsD.GroupKing.Location.compare(figure.Point)){
                         this.TeamsD.GroupKing.GoTo(id);
                         this.TeamsD.EditPointFigure(figure,this.TeamsD.GroupKing.Location);
@@ -760,14 +681,14 @@ function Board() {
                     case 5:
                         tmp = this.TeamsW.Queens;
                         break;
-                    case 6: 
+                    case 6:
                         tmp.push(this.TeamsW.GroupKing);
                         break;
                     default:
                         break;
                 }
                 for (let i = 1; i <= 8; i++) {
-                    let tmpPoints = [];//PointAccess;
+                    let tmpPoints = [];
                     let DestroyGoPoints = [];
                     tmpPoints[0] = new Point(tmp[tmpF].Location.X,      tmp[tmpF].Location.Y + i);
                     tmpPoints[1] = new Point(tmp[tmpF].Location.X + i,  tmp[tmpF].Location.Y + i);
@@ -777,22 +698,7 @@ function Board() {
                     tmpPoints[5] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y - i);
                     tmpPoints[6] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y);
                     tmpPoints[7] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y + i);
-                    /*if(PointAccess[0]){
-                    }
-                    if(PointAccess[1]){
-                    }
-                    if(PointAccess[2]){
-                    }
-                    if(PointAccess[3]){
-                    }
-                    if(PointAccess[4]){
-                    }
-                    if(PointAccess[5]){
-                    }
-                    if(PointAccess[6]){
-                    }
-                    if(PointAccess[7]){
-                    }*/
+
                     for (let j = 0; j < tmpPoints.length; j++) {
                         if(PointAccess[j]){
                             if(this.TeamsW.IsBusyPoint(tmpPoints[j])){
@@ -803,7 +709,6 @@ function Board() {
                             }
                             else if(this.TeamsD.IsBusyPoint(tmpPoints[j])){
                                 if(tmp[tmpF].IsGoPoint(tmpPoints[j])){
-                                    //DestroyGoPoints.push(tmpPoints[j]);
                                     PointAccess[j] = false;
                                 }
                             }
@@ -833,7 +738,7 @@ function Board() {
                             case 5:
                                 this.TeamsW.Queens[tmpF].GoPoints.splice(this.TeamsW.Queens[tmpF].FindGoPoint(DestroyGoPoints[j]),1);
                                 break;
-                            case 6: 
+                            case 6:
                                 this.TeamsW.GroupKing.GoPoints.splice(this.TeamsW.GroupKing.FindGoPoint(DestroyGoPoints[j]),1);
                                 break;
                             default:
@@ -860,14 +765,14 @@ function Board() {
                     case 5:
                         tmp = this.TeamsD.Queens;
                         break;
-                    case 6: 
+                    case 6:
                         tmp.push(this.TeamsD.GroupKing);
                     break;
                     default:
                         break;
                 }
                 for (let i = 1; i <= 8; i++) {
-                    let tmpPoints = [];//PointAccess;
+                    let tmpPoints = [];
                     let DestroyGoPoints = [];
                     tmpPoints[0] = new Point(tmp[tmpF].Location.X,      tmp[tmpF].Location.Y + i);
                     tmpPoints[1] = new Point(tmp[tmpF].Location.X + i,  tmp[tmpF].Location.Y + i);
@@ -877,22 +782,7 @@ function Board() {
                     tmpPoints[5] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y - i);
                     tmpPoints[6] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y);
                     tmpPoints[7] = new Point(tmp[tmpF].Location.X - i,  tmp[tmpF].Location.Y + i);
-                    /*if(PointAccess[0]){
-                    }
-                    if(PointAccess[1]){
-                    }
-                    if(PointAccess[2]){
-                    }
-                    if(PointAccess[3]){
-                    }
-                    if(PointAccess[4]){
-                    }
-                    if(PointAccess[5]){
-                    }
-                    if(PointAccess[6]){
-                    }
-                    if(PointAccess[7]){
-                    }*/
+
                     for (let j = 0; j < tmpPoints.length; j++) {
                         if(PointAccess[j]){
                             if(this.TeamsD.IsBusyPoint(tmpPoints[j])){
@@ -903,7 +793,6 @@ function Board() {
                             }
                             else if(this.TeamsW.IsBusyPoint(tmpPoints[j])){
                                 if(tmp[tmpF].IsGoPoint(tmpPoints[j])){
-                                    //DestroyGoPoints.push(tmpPoints[j]);
                                     PointAccess[j] = false;
                                 }
                             }
@@ -933,7 +822,7 @@ function Board() {
                             case 5:
                                 this.TeamsD.Queens[tmpF].GoPoints.splice(this.TeamsD.Queens[tmpF].FindGoPoint(DestroyGoPoints[j]),1);
                                 break;
-                            case 6: 
+                            case 6:
                                 this.TeamsD.GroupKing.GoPoints.splice(this.TeamsD.GroupKing.FindGoPoint(DestroyGoPoints[j]),1);
                                 break;
                             default:
@@ -942,7 +831,6 @@ function Board() {
                     }
                 }
             }
-
         }
     }
     this.FilterAllFigure = function () {
@@ -973,7 +861,7 @@ function Board() {
                 case 5:
                     tmp = this.TeamsW.Queens;
                     break;
-                case 6: 
+                case 6:
                     return this.TeamsW.GroupKing.GoPoints;
                     break;
                 default:
@@ -1003,7 +891,7 @@ function Board() {
                 case 5:
                     tmp = this.TeamsD.Queens;
                     break;
-                case 6: 
+                case 6:
                     return this.TeamsD.GroupKing.GoPoints;
                     break;
                 default:
@@ -1074,120 +962,79 @@ var arrL = board1.DrawFigures();
 
 function DrawFigure() {
     let arr = $("#board > div");
-    //board1.FilterPawns();
+
     for (let i = 0; i < arr.length; i++) {
         let img = $('<img/>');
         switch (arrL[i].Type) {
             case 0:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','none');
                 }
                 else{
-                    //arr.eq(i).css('background-image','none');
                 }
                 break;
             case 1:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wP.png');
-                    //arr.eq(i).style.backgroundImage = 'img\wP.png';
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wP.png"}));
-                    img.attr("src", "./img/wP.png").attr("id","theImg");
+                    img.attr("src", "./img/wP.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bP.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bP.png"}));
-                    img.attr("src", "./img/bP.png").attr("id","theImg");
+                    img.attr("src", "./img/bP.png").addClass("piece");
                 }
                 break;
             case 2:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wR.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wR.png"}));
-                    img.attr("src", "./img/wR.png").attr("id","theImg");
+                    img.attr("src", "./img/wR.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bR.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bR.png"}));
-                    img.attr("src", "./img/bR.png").attr("id","theImg");
+                    img.attr("src", "./img/bR.png").addClass("piece");
                 }
                 break;
             case 3:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wN.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wN.png"}));
-                    img.attr("src", "./img/wN.png").attr("id","theImg");
+                    img.attr("src", "./img/wN.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bN.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bN.png"}));
-                    img.attr("src", "./img/bN.png").attr("id","theImg");
+                    img.attr("src", "./img/bN.png").addClass("piece");
                 }
                 break;
             case 4:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wB.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wB.png"}));
-                    img.attr("src", "./img/wB.png").attr("id","theImg");
+                    img.attr("src", "./img/wB.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bB.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bB.png"}));
-                    img.attr("src", "./img/bB.png").attr("id","theImg");
+                    img.attr("src", "./img/bB.png").addClass("piece");
                 }
                 break;
             case 5:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wQ.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wQ.png"}));
-                    img.attr("src", "./img/wQ.png").attr("id","theImg");
+                    img.attr("src", "./img/wQ.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bQ.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bQ.png"}));
-                    img.attr("src", "./img/bQ.png").attr("id","theImg");
+                    img.attr("src", "./img/bQ.png").addClass("piece");
                 }
                 break;
             case 6:
                 if(arrL[i].IsWhite == true){
-                    //arr.eq(i).css('background-image','img\wK.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/wK.png"}));
-                    img.attr("src", "./img/wK.png").attr("id","theImg");
+                    img.attr("src", "./img/wK.png").addClass("piece");
                 }
                 else{
-                    //arr.eq(i).css('background-image','img\bK.png');
-                    //arr.eq(i).prepend($('<img>',{id:'theImg',src:"./img/bK.png"}));
-                    img.attr("src", "./img/bK.png").attr("id","theImg");
+                    img.attr("src", "./img/bK.png").addClass("piece");
                 }
                 break;
             default:
                 break;
         }
-        img.click(function(){ DrawGoPoints(i/*%8,Math.floor(8-(i/8))*/);});
+        img.click(function(){ DrawGoPoints(i);});
         arr.eq(i).prepend(img);
     }
 }
 
-
-
 $(function(){
     DrawBoard();
     let arr = $("#board > div");
-    /*for (let i = 0; i < 8*8; i++) {
-        let sq = $('<div/>');
-        sq.css({position:'relative',width:64,height:64,float:'left'});
-        $('#board').append(sq);
-    }
-    arr = $("#board > div");
-    for(let i=0;i<arr.length;i++){
-        if(Coord(i%8,Math.floor(i/8))){
-            arr.eq(i).css('background-color', 'gray')
-        }
-    }*/
 
     board1 = new Board();
     board1.FilterAllFigure();
     DrawFigure();
-    
 })
 
 function DrawGoPoints(id) {
@@ -1208,11 +1055,6 @@ function DrawGoPoints(id) {
     return;
 }
 
-function sleep(ms) {
-    ms += new Date().getTime();
-    while (new Date() < ms){}
-}
-
 function GoFigure(id,toGoId) {
     DrawBoard();
     DrawFigure();
@@ -1223,36 +1065,15 @@ function GoFigure(id,toGoId) {
     let goPoint = tmpGoP[toGoId];
     let TLFx = (goPoint.X - tmpF.Point.X)*64;
     let TLFy = (goPoint.Y - tmpF.Point.Y)*64;
-    /*let UDRL = [0,0,0,0];
-    if(TLFx>0){
-        UDRL[2] = Math.abs(TLFx);
-    }
-    else{
-        UDRL[3] = Math.abs(TLFx);
-    }
-    if(TLFy>0){
-        UDRL[0] = Math.abs(TLFy);
-    }
-    else{
-        TLFy[1] = Math.abs(TLFy);
-    }*/
+
     arr.eq(id).children("img").animate({
         top: ((TLFy>0)?'-':'+') + '=' + Math.abs(TLFy) + 'px',
         right: ((TLFx>0)?'-':'+') + '=' + Math.abs(TLFx) + 'px'
     },'2000');
-    /*console.log(Math.abs(TLFy));
-    console.log(TLFx);
-    console.log(((TLFy>0)?'-':'+') + '=' + Math.abs(TLFy) + 'px');
-    console.log((TLFx>0)?'-':'+' + '=' + Math.abs(TLFx) + 'px');*/
-    //sleep(2000);
+
     board1.GoFigure(tmpF,toGoId);
     board1.FilterAllFigure();
     arrL = board1.DrawFigures();
     DrawBoard();
     DrawFigure();
-    
-    
-    //console.log(id);
-    //console.log(toGoId);
 }
-  

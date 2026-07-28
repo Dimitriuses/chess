@@ -5,7 +5,7 @@
     position:relative;
     padding:0px;
   }
-#theImg{
+.piece{
     width: 64px;
     height: 64px;
     position: relative;
