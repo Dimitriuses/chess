@@ -19,12 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-NOTE ON THE PIECE IMAGES
-
-The MIT licence above covers the source code. It does NOT cover the twelve chess
-piece images in img/, which are by Cburnett, from Wikimedia Commons, and are
-licensed CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/).
-See img/ATTRIBUTION.md for the per-file source list.
