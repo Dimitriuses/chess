@@ -215,7 +215,8 @@ The **piece images** are by [Cburnett](https://commons.wikimedia.org/wiki/User:C
 from Wikimedia Commons, licensed **[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)**
 — the same set Wikipedia, lichess and chessboard.js use. They are rasterised here to 80×80 PNGs
 from the original SVGs ([`Chess_klt45.svg`](https://commons.wikimedia.org/wiki/File:Chess_klt45.svg)
-and its eleven siblings); as derivatives they remain under CC BY-SA 3.0, not MIT.
+and its eleven siblings); as derivatives they remain under CC BY-SA 3.0, not MIT. See
+[`img/ATTRIBUTION.md`](img/ATTRIBUTION.md) for the per-file source list.
 
 They are not the images this repository shipped in 2019. Those were downloaded from a source
 that was never written down, and they turned out not to be identifiable — laid side by side with
